@@ -149,12 +149,29 @@ img { max-width: 100%; display: block; }
 
 /* figure cards (white figures on dark page) */
 .fig-card {
-  background: #fff; border-radius: var(--radius);
-  padding: 14px; box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  position: relative;
+  background: #fff; border-radius: 18px;
+  padding: 14px;
   margin-bottom: 44px;
+  border: 1px solid rgba(148, 163, 216, .28);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, .12),
+    0 0 44px rgba(34, 211, 238, .07),
+    0 22px 60px rgba(0, 0, 0, .55);
 }
-.fig-card img { border-radius: 9px; }
-.fig-card figcaption { padding: 12px 6px 2px; font-size: 13px; color: #4b5164; line-height: 1.55; }
+/* gradient edge: lets the white card melt softly into the dark page */
+.fig-card::after {
+  content: ""; position: absolute; inset: -1px; border-radius: 18px;
+  padding: 1px; pointer-events: none;
+  background: linear-gradient(140deg, rgba(34, 211, 238, .55), rgba(148, 163, 216, .12) 30%, rgba(148, 163, 216, .12) 70%, rgba(129, 140, 248, .5));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.fig-card img { border-radius: 10px; }
+.fig-card figcaption {
+  padding: 12px 6px 2px; font-size: 13px; color: #4b5164; line-height: 1.55;
+  border-top: 1px dashed rgba(75, 81, 100, .18); margin: 10px 6px 0;
+}
 
 /* abstract: newspaper-style two-column prose */
 .prose {
