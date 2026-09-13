@@ -81,7 +81,11 @@
     requestAnimationFrame(frame);
   })();
 
-  /* ---------- Fisheye marquee: build track, duplicate for seamless loop ---------- */
+  /* ---------- Fisheye marquee ----------
+     Build enough copies of the unique set so that:
+     (a) one half of the track (the -50% the animation shifts by)
+         is always wider than the viewport → right side never empties;
+     (b) each scene appears only once per screen at a time.          */
   (function marquee() {
     var track = document.getElementById("marquee-track");
     if (!track) return;
@@ -92,9 +96,26 @@
       { src: "assets/images/fisheye-street.jpg",    label: "Ours · street" },
       { src: "assets/images/fisheye-woodspace.jpg", label: "WoodSpace · urban" }
     ];
-    var html = shots.map(function (s) {
+    var setHtml = shots.map(function (s) {
       return '<figure class="feye"><img src="' + s.src + '" alt="' + s.label + '" loading="lazy"><figcaption>' + s.label + "</figcaption></figure>";
     }).join("");
-    track.innerHTML = html + html; // two copies → translateX(-50%) loops seamlessly
+
+    function build() {
+      track.innerHTML = setHtml;
+      var setW = track.scrollWidth + 26; // one set + its trailing gap
+      var perScreen = Math.max(1, Math.ceil((window.innerWidth * 1.05) / setW));
+      var halfSets = Math.max(perScreen, 2);   // sets in one animation half
+      var html = "";
+      for (var i = 0; i < halfSets * 2; i++) html += setHtml;
+      track.innerHTML = html;
+      // ~55 px/s drift → duration = half width / speed
+      track.style.setProperty("--slide-dur", ((setW * halfSets) / 55).toFixed(1) + "s");
+    }
+    build();
+    var rt;
+    window.addEventListener("resize", function () {
+      clearTimeout(rt);
+      rt = setTimeout(build, 200);
+    });
   })();
 })();

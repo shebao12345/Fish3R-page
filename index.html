@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='none' stroke='%2322d3ee' stroke-width='7'/><circle cx='50' cy='50' r='10' fill='%2322d3ee'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -51,79 +51,84 @@
 <section class="strip" id="strip" aria-label="Fisheye cameras">
   <p class="strip-label">If it looks like this — <strong>Fish3R reconstructs it.</strong></p>
   <div class="marquee">
-    <div class="marquee-track" id="marquee-track"><!-- duplicated by JS for a seamless loop --></div>
+    <div class="marquee-track" id="marquee-track"><!-- built by JS: enough copies for a seamless, gap-free loop --></div>
   </div>
 </section>
 
 <!-- ======================= ABSTRACT ======================= -->
 <section class="section" id="abstract">
-  <div class="wrap">
-    <h2 class="sec-title"><span class="num">01</span>Abstract</h2>
-    <div class="abstract-grid">
-      <div class="prose">
-        <p>Fisheye cameras are the dominant sensor for wide-coverage scene perception, yet their severe nonlinear radial distortion poses a fundamental challenge to existing feed-forward 3D reconstruction methods. Full-frame rectification is inherently flawed: heavily distorted peripheral content cannot be represented on a single perspective canvas, and even recoverable regions suffer degraded geometric fidelity after warping.</p>
-        <p>We propose <strong>Fish3R</strong>, a distortion-aware feed-forward reconstruction framework that adopts a divide-and-conquer strategy: it rectifies <em>only</em> the trustworthy low-distortion region and reconstructs the rest via direct inverse mapping. Guided by a predicted per-pixel angle table, Fish3R rectifies the central low-distortion area into a star-shaped perspective view, from which a jointly adapted fisheye model based on VGGT recovers stable multi-view poses and a base point cloud. The high-distortion periphery is then lifted to 3D through the angle table under the recovered poses, and an adaptive confidence pruning module consolidates the fused point cloud.</p>
-        <p>Experiments on synthetic and real fisheye scenes show that Fish3R outperforms both traditional and learning-based baselines — indoors and outdoors, single-view and multi-view, across the <strong>full fisheye field of view</strong>.</p>
-      </div>
-      <figure class="fig-card">
-        <img src="assets/images/teaser.jpg" alt="Fish3R generalization: single-view and multi-view reconstruction on four different fisheye sources — Our Dataset, Woodspace, ScanNet++ and KITTI." loading="lazy">
-        <figcaption>One model, every regime — indoor &amp; outdoor, single-view &amp; multi-view, four different fisheye cameras and datasets.</figcaption>
-      </figure>
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="kicker">Abstract</span>
+      <h2>Severe distortion in.<br>Complete geometry out.</h2>
+    </div>
+    <figure class="fig-card">
+      <img src="assets/images/teaser.jpg" alt="Fish3R generalization: single-view and multi-view reconstruction on four different fisheye sources — Our Dataset, Woodspace, ScanNet++ and KITTI." loading="lazy">
+      <figcaption>One model, every regime — indoor &amp; outdoor, single-view &amp; multi-view, four different fisheye cameras and datasets.</figcaption>
+    </figure>
+    <div class="prose">
+      <p>Fisheye cameras are the dominant sensor for wide-coverage scene perception, yet their severe nonlinear radial distortion poses a fundamental challenge to existing feed-forward 3D reconstruction methods. Full-frame rectification is inherently flawed: heavily distorted peripheral content cannot be represented on a single perspective canvas, and even recoverable regions suffer degraded geometric fidelity after warping.</p>
+      <p>We propose <strong>Fish3R</strong>, a distortion-aware feed-forward reconstruction framework that adopts a divide-and-conquer strategy: it rectifies <em>only</em> the trustworthy low-distortion region and reconstructs the rest via direct inverse mapping. Guided by a predicted per-pixel angle table, Fish3R rectifies the central low-distortion area into a star-shaped perspective view, from which a jointly adapted fisheye model based on VGGT recovers stable multi-view poses and a base point cloud. The high-distortion periphery is then lifted to 3D through the angle table under the recovered poses, and an adaptive confidence pruning module consolidates the fused point cloud.</p>
+      <p>Experiments on synthetic and real fisheye scenes show that Fish3R outperforms both traditional and learning-based baselines — indoors and outdoors, single-view and multi-view, across the <strong>full fisheye field of view</strong>.</p>
     </div>
   </div>
 </section>
 
 <!-- ======================= METHOD ======================= -->
 <section class="section alt" id="method">
-  <div class="wrap">
-    <h2 class="sec-title"><span class="num">02</span>Method</h2>
-    <p class="sec-lead">Distortion is not an obstacle. It is a guide.</p>
-    <figure class="fig-card wide">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="kicker">Method</span>
+      <h2>Distortion is not an obstacle.<br>It is a guide.</h2>
+    </div>
+    <figure class="fig-card">
       <img src="assets/images/pipeline.jpg" alt="The Fish3R framework: angle-guided regional division, star-shaped rectification, Fish3R VGGT with FEM heads, and adaptive point cloud pruning." loading="lazy">
-      <figcaption>The Fish3R framework: regional division steered by the predicted angle table → star-shaped rectification → VGGT with FEM (fisheye model) heads → periphery lifted by inverse mapping → ACP pruning yields the final full-FOV cloud.</figcaption>
+      <figcaption>The Fish3R framework — regional division steered by the predicted angle table, star-shaped rectification, VGGT with FEM heads, periphery lifted by inverse mapping, and ACP pruning for the final full-FOV cloud.</figcaption>
     </figure>
-    <div class="cards">
-      <div class="card">
-        <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z"/></svg>
-        </div>
+
+    <ol class="stepper">
+      <li class="step">
+        <span class="step-no">01</span>
         <h3>Star-Shaped Rectification</h3>
         <p>Only the central low-distortion region is rectified — into a star-shaped perspective view whose concave arcs trace the exact distortion frontier. No fisheye content is ever forced onto a canvas it cannot fit.</p>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><circle cx="12" cy="12" r="2.5"/></svg>
-        </div>
+      </li>
+      <li class="step">
+        <span class="step-no">02</span>
         <h3>Angle-Table Inverse Mapping</h3>
         <p>A predicted per-pixel angle table records every ray's angle to the optical axis. The high-distortion periphery — deliberately left out of rectification — is lifted to 3D by direct inverse mapping under the recovered poses.</p>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/><path d="M9 9v12"/></svg>
-        </div>
+      </li>
+      <li class="step">
+        <span class="step-no">03</span>
         <h3>FEM Joint Adaptation</h3>
         <p>Lightweight LoRA adapters (Cam-Opt &amp; Depth-Opt) retune the camera and depth heads of a frozen VGGT backbone onto the virtual pinhole canvas — geometry and poses improve jointly, in one consistent objective.</p>
-      </div>
-      <div class="card">
-        <div class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.4-3 8-7 9-4-1-7-4.6-7-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
-        </div>
+      </li>
+      <li class="step">
+        <span class="step-no">04</span>
         <h3>Adaptive Confidence Pruning</h3>
         <p>Block-wise color-geometry matching scores every image block; reliable regions survive into the merged cloud while unreliable ones are pruned — consolidating a clean, complete full-FOV reconstruction.</p>
-      </div>
-    </div>
+      </li>
+    </ol>
   </div>
 </section>
 
-<!-- ======================= RESULTS ======================= -->
-<section class="section" id="results">
-  <div class="wrap">
-    <h2 class="sec-title"><span class="num">03</span>Component Study</h2>
-    <p class="sec-lead">Every module earns its place — reconstruction fidelity grows as components switch on, from the VGGT baseline to the full Fish3R model.</p>
-    <figure class="fig-card wide">
-      <img src="assets/images/ablation.jpg" alt="Component-wise ablation of Fish3R: VGGT baseline, plus ACPCP, camera optimization, depth optimization, and the full model with distortion map." loading="lazy">
-      <figcaption>Component-wise ablation — each addition sharpens geometry, alignment and coverage, culminating in the full model (right).</figcaption>
-    </figure>
+<!-- ======================= ABLATION ======================= -->
+<section class="section" id="ablation">
+  <div class="wrap-wide">
+    <div class="sec-head">
+      <span class="kicker">Ablation Study</span>
+      <h2>Every module earns its place.</h2>
+    </div>
+    <div class="split">
+      <figure class="fig-card">
+        <img src="assets/images/ablation.jpg" alt="Component-wise ablation of Fish3R: VGGT baseline, plus ACPCP, camera optimization, depth optimization, and the full model with distortion map." loading="lazy">
+        <figcaption>Component-wise ablation — each addition sharpens geometry, alignment and coverage, culminating in the full model.</figcaption>
+      </figure>
+      <aside class="aside-note">
+        <p class="aside-big">Reconstruction fidelity grows as each component switches on — from the VGGT baseline to the full Fish3R model.</p>
+        <p class="aside-small">The distortion map is the decisive step: only with per-ray angle guidance does the peripheral content snap into place, turning a fragmented cloud into a coherent scene.</p>
+        <p class="aside-arrow" aria-hidden="true">→</p>
+      </aside>
+    </div>
   </div>
 </section>
 
