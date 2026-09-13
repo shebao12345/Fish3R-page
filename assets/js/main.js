@@ -90,13 +90,13 @@
     var track = document.getElementById("marquee-track");
     if (!track) return;
     var shots = [
-      { src: "assets/images/fisheye-kitti.jpg",     label: "KITTI · driving" },
+      { src: "assets/images/fisheye-kitti.jpg",     label: "KITTI-360 · street" },
       { src: "assets/images/fisheye-kitti360.jpg",  label: "KITTI-360 · driving" },
       { src: "assets/images/fisheye-mall.jpg",      label: "Ours · indoor" },
       { src: "assets/images/fisheye-scannet.jpg",   label: "ScanNet++ · indoor" },
       { src: "assets/images/fisheye-scannet2.jpg",  label: "ScanNet++ · room" },
       { src: "assets/images/fisheye-street.jpg",    label: "Ours · street" },
-      { src: "assets/images/fisheye-woodspace.jpg", label: "WoodSpace · urban" }
+      { src: "assets/images/fisheye-woodspace.jpg", label: "WoodScape · urban" }
     ];
     var setHtml = shots.map(function (s) {
       return '<figure class="feye"><img src="' + s.src + '" alt="' + s.label + '" loading="lazy"><figcaption>' + s.label + "</figcaption></figure>";
